@@ -1,0 +1,44 @@
+﻿<ribbon:RibbonWindow  x:Class="ExpertOblicKosztowZam.MainWindow"
+                       xmlns:ribbon="http://schemas.microsoft.com/winfx/2006/xaml/presentation"   
+		xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		
+                                          Title="ExpertOblicKosztowZam"
+		x:Name="RibbonWindow"
+		Width="1280" Height="1024" WindowState="Maximized" xmlns:my="clr-namespace:System;assembly=mscorlib" Loaded="RibbonWindow_Loaded">
+    <ribbon:RibbonWindow.Resources>
+
+        <my:Double x:Key="Width1">NaN</my:Double>
+        <my:Double x:Key="Height1">NaN</my:Double>
+        <!--<local:PermisionToVisibilityConverter x:Key="PermisionToVisibility" />-->
+    </ribbon:RibbonWindow.Resources>
+    <Grid x:Name="LayoutRoot">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="5" />
+        </Grid.RowDefinitions>
+        <ribbon:Ribbon x:Name="Ribbon">
+            <ribbon:RibbonTab x:Name="rtParams" Header="Params" Padding="0">
+                <ribbon:RibbonGroup x:Name="Group1" Header="Inicjalize" >
+                    <ribbon:RibbonButton x:Name="btRead" Label="Wczytaj" LargeImageSource="Image/applications.png" Click="btRead_Click"/>
+                    <ribbon:RibbonButton x:Name="btOpenGrid" Label="Zamówienia" LargeImageSource="Image/make.png" Click="btOpenGrid_Click"/>
+                    <ribbon:RibbonButton x:Name="btCalculate" Label="Strukura Procesu" LargeImageSource="Image/calculator_operations.png" Click="btCalculate_Click"/>
+                    <ribbon:RibbonButton x:Name="btSchedule" Label="harmonogram procesu" LargeImageSource="Image/kviewshell.png" Click="btSchedule_Click"/>
+                    <ribbon:RibbonButton x:Name="btExit" Label="Exit" LargeImageSource="Image/exit1.png" Click="btExit_Click" />
+                </ribbon:RibbonGroup>
+            </ribbon:RibbonTab>
+    </ribbon:Ribbon>
+
+        <TabControl Name="tcMdi" Visibility="Visible" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch" BorderBrush="Azure" BorderThickness="5" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto" SelectionChanged="tcMdi_SelectionChanged" Grid.Row="1" Width="{StaticResource Width1}" Height="{StaticResource Height1}">
+            <TabControl.Background>
+                <LinearGradientBrush EndPoint="1,0.5" StartPoint="0,0.5">
+                    <GradientStop Color="#FFECF5FC" Offset="0" />
+                    <GradientStop Color="#FFD0D7E5" Offset="1" />
+                </LinearGradientBrush>
+            </TabControl.Background>
+        </TabControl>
+    </Grid>
+    
+
+</ribbon:RibbonWindow>
