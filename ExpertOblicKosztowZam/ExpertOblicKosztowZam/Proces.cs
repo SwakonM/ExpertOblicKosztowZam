@@ -1,293 +1,283 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ExpertOblicKosztowZam
 {
-    public class Zamowinia : INotifyPropertyChanged
-    { 
-        
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
 
-        public Zamowinia(string _IdZam, int _LiczZam , Double _BazowyWspoczIlos, Double _DenominatorMin,Double _maxValue)
-        { 
-            IdZam = _IdZam;
-            liczZam = _LiczZam;
-            BazowyWspoczIlos = _BazowyWspoczIlos;
-            DenominatorMin = _DenominatorMin;
-            MaxValue = _maxValue;
-        }
-        public Zamowinia()
-            : this("", -1, -1, -1, -1)
-        { }
 
-        private Double maxValue;
-        public System.Double MaxValue
+    public class Proces 
+    {
+        internal static List<List<int>> GenerateSequenceIndex(List<string> my_ColumnName)
         {
-            get { return maxValue; }
-            set { maxValue = value; }
-        }
-        private Double bazowyWspoczIlos;
-        public System.Double BazowyWspoczIlos
-        {
-            get { return bazowyWspoczIlos; }
-            set { 
-                bazowyWspoczIlos = value;
+       
+            List<string> listModules = GetListModules(my_ColumnName);
+           var orgList = new Dictionary<int, Tuple<string, string>>();
+            var tempList = new Dictionary<int, Tuple<string, string>>();
+
+            int cout = 0;
+            foreach (var ity in my_ColumnName)
+            {
+
+                if (ity.IndexOf("->") > 0)
+                {
+
+                    var temp1 = ity.Substring(0, ity.IndexOf("->"));
+
+                    var temp2 = ity.Substring(ity.IndexOf("->") + 2);
+                    orgList.Add(cout, Tuple.Create(temp1.Trim(), temp2.Trim()));
+                    tempList.Add(cout, Tuple.Create(temp1.Trim(), temp2.Trim()));
+                }
+                cout++;
             }
-        }
 
-        private Double denominatorMin;
-        public System.Double DenominatorMin
-        {
-            get { return denominatorMin; }
-            set { denominatorMin = value;
+            
+            Dictionary<string, Tuple<int, int>> listInOut = new Dictionary<string, Tuple<int, int>>();
+            cout = 0;
+            foreach (var tempModule in listModules)
+            {
+                var indexIn = -1;
+                var indexOut = -1;
+                cout = 0;
+                foreach (var ity in my_ColumnName)
+                {
 
+                    if (ity.IndexOf(tempModule.ToString()) > -1 && ity.IndexOf("__in") > -1)
+                    {
+                        indexIn = cout;
+                    }
+                    if (ity.IndexOf(tempModule.ToString()) > -1 && ity.IndexOf("__out") > -1)
+                    {
+                        indexOut = cout;
+                    }
+                    cout++;
+                }
+                if (indexIn != -1 || indexOut != -1)
+                {
+                    listInOut.Add(tempModule.ToString(), Tuple.Create(indexIn, indexOut));
+                }
+                cout++;
+            }
+            var listModulesList = new List<Dictionary<int, Tuple<string, string>>>();
+            var tempNewList = new Dictionary<int, Tuple<string, string>>();
+            var ModuleStac = new Stack<Tuple<int,string, string>>();
+            var first = tempList.ElementAt(0);
+            
+            var oldElem = first;
+            var lastElem = tempList.ElementAt(tempList.Count - 1);
+            var elem = first.Value;
+            var index = first.Key;
+            tempList.Remove(first.Key);
+            tempNewList.Add(first.Key, first.Value);
+            bool isBack = false;
+            bool isLastElem = false;
+            List<int> backIndex = new List<int>();
+            while (tempList.Count > 0)
+            {
                 
-                if (denominatorMin > 0 && LiczZam / denominatorMin > 0.1f)
+                if(isBack )
                 {
-                    Wspolczynik = MaxValue;
+                    first = GetBack(tempList, elem);
+                  
                 }
-                else if (denominatorMin > 0)
+                else
                 {
-                    Wspolczynik = BazowyWspoczIlos + LiczZam / denominatorMin;
+                    first = GetNext(tempList, elem, isLastElem, tempNewList);
+                }
+
+                if (elem.Item1 == lastElem.Value.Item1 && elem.Item2 == lastElem.Value.Item2|| elem.Item1 == lastElem.Value.Item2 && elem.Item2 == lastElem.Value.Item1)
+                {
+                    isLastElem = true;
+                }
+
+
+
+                if (first.Equals(default(KeyValuePair<int, Tuple<string, string>>)))
+                {
+                    
+                     if (ModuleStac.Count > 0)
+                    {
+                        while (ModuleStac.Count > 0)
+                        {
+                            var ity = ModuleStac.Pop();
+                            tempList.Remove(ity.Item1);
+                        }
+                    }
+                    var ityIndex = FindIndex(orgList, elem);
+                    if (ityIndex >= 0)
+                    {
+                        ModuleStac.Push(Tuple.Create(ityIndex, elem.Item1, elem.Item2));
+                        tempNewList.Remove(ityIndex);
+                    }
+                      
+                    elem = Tuple.Create(elem.Item2, elem.Item1);
+                   
+
+                    isBack = true;
+                }
+                else if(isBack )
+                {
+                   
+                    ModuleStac.Push(Tuple.Create(first.Key, first.Value.Item1, first.Value.Item2));
+                    if (ModuleStac.Count > 1)
+                    {
+                        var templist = new Dictionary<int, Tuple<string, string>>();
+                        foreach (var ity in ModuleStac.OrderBy(i => i.Item1))
+                        {
+                            if (!isLastElem)
+                            {
+                                templist.Add(ity.Item1, Tuple.Create(ity.Item2, ity.Item3));
+                            }
+                            else
+                                tempNewList[ity.Item1] = Tuple.Create(ity.Item2, ity.Item3);
+                        }
+                        ModuleStac.Clear();
+                        if (!isLastElem)
+                            listModulesList.Add(templist);
+                       
+
+                    }
+                    tempList.Remove(first.Key);
+                    elem = first.Value;
+                  
+                    isBack = false;
+                }
+                else
+                {
+                    if(ModuleStac.Count>1)
+                    {
+                        var templist = new Dictionary<int, Tuple<string, string>>();
+                        while(ModuleStac.Count > 0)
+                        {
+                             var ity =  ModuleStac.Pop();
+                            
+                            templist.Add(ity.Item1,  Tuple.Create(ity.Item2,ity.Item3));
+                           
+
+                        }
+                        listModulesList.Add(templist);
+                    }
+                    else if(ModuleStac.Count >0)
+                    {
+                        while (ModuleStac.Count > 0)
+                        {
+                            var ity = ModuleStac.Pop();
+                            tempList.Remove(ity.Item1);
+                        }
+                    }
+                    tempNewList.Add(first.Key, first.Value);
+                    elem = first.Value;
+                    ModuleStac.Push(Tuple.Create(first.Key, elem.Item1, elem.Item2));
+
+
+                }
+
+
+                if (tempList.Count == 0)
+                {
+                    listModulesList.Add(tempNewList);
                 }
             }
-        }
-        private string idZam;
-        public string IdZam
-        {
-            get { return idZam; }
-            set { idZam = value; }
-        }
-        private int liczZam;
-        public int LiczZam
-        {
-            get { return liczZam; }
-            set { liczZam = value; }
-        }
-        private Double coll1;
-        public System.Double Coll1
-        {
-            get { return coll1; }
-            set { coll1 = value; KosztLogicznyObslugi = CalculateTotalCost(); }
-        }
-        private Double coll2;
-        public System.Double Coll2
-        {
-            get { return coll2; }
-            set { coll2 = value; KosztLogicznyObslugi = CalculateTotalCost(); }
-        }
-        private Double coll3;
-        public System.Double Coll3
-        {
-            get { return coll3; }
-            set { coll3 = value; KosztLogicznyObslugi = CalculateTotalCost(); }
-        }
-        private Double coll4;
-        public System.Double Coll4
-        {
-            get { return coll4; }
-            set { coll4 = value; KosztLogicznyObslugi = CalculateTotalCost(); }
-        }
-        private Double coll5;
-        public System.Double Coll5
-        {
-            get { return coll5; }
-            set { coll5 = value; KosztLogicznyObslugi = CalculateTotalCost(); }
-        }
-        private Double coll6;
-        public System.Double Coll6
-        {
-            get { return coll6; }
-            set { coll6 = value; KosztLogicznyObslugi = CalculateTotalCost(); }
-        }
-        private Double coll7;
-        public System.Double Coll7
-        {
-            get { return coll7; }
-            set { coll7 = value; KosztLogicznyObslugi = CalculateTotalCost(); }
-        }
-        private Double coll8;
-        public System.Double Coll8
-        {
-            get { return coll8; }
-            set { coll8 = value; KosztLogicznyObslugi = CalculateTotalCost(); }
-        }
-        private Double coll9;
-        public System.Double Coll9
-        {
-            get { return coll9; }
-            set { coll9 = value; KosztLogicznyObslugi = CalculateTotalCost(); }
-        }
-        private Double coll10;
-        public System.Double Coll10
-        {
-            get { return coll10; }
-            set { coll10 = value; KosztLogicznyObslugi = CalculateTotalCost(); }
-        }
-        private Double coll11;
-        public System.Double Coll11
-        {
-            get { return coll11; }
-            set { coll11 = value; KosztLogicznyObslugi = CalculateTotalCost(); }
-        }
-        private Double coll12;
-        public System.Double Coll12
-        {
-            get { return coll12; }
-            set { coll12 = value; KosztLogicznyObslugi = CalculateTotalCost(); }
-        }
-        private Double coll13;
-        public System.Double Coll13
-        {
-            get { return coll13; }
-            set { coll13 = value; KosztLogicznyObslugi = CalculateTotalCost(); }
-        }
-        private Double coll14;
-        public System.Double Coll14
-        {
-            get { return coll14; }
-            set { coll14 = value; KosztLogicznyObslugi = CalculateTotalCost(); }
-        }
-        private Double coll15;
-        public System.Double Coll15
-        {
-            get { return coll15; }
-            set { coll15 = value; KosztLogicznyObslugi = CalculateTotalCost(); }
-        }
-        private Double coll16;
-        public System.Double Coll16
-        {
-            get { return coll16; }
-            set { coll16 = value; KosztLogicznyObslugi = CalculateTotalCost(); }
-        }
-        private Double coll17;
-        public System.Double Coll17
-        {
-            get { return coll17; }
-            set { coll17 = value; KosztLogicznyObslugi = CalculateTotalCost(); }
-        }
-        private Double coll18;
-        public System.Double Coll18
-        {
-            get { return coll18; }
-            set { coll18 = value; KosztLogicznyObslugi = CalculateTotalCost(); }
-        }
-        private Double coll19;
-        public System.Double Coll19
-        {
-            get { return coll19; }
-            set { coll19 = value; KosztLogicznyObslugi = CalculateTotalCost(); }
-        }
-        private Double coll20;
-        public System.Double Coll20
-        {
-            get { return coll20; }
-            set { coll20 = value; KosztLogicznyObslugi = CalculateTotalCost(); }
-        }
-        private Double coll21;
-        public System.Double Coll21
-        {
-            get { return coll21; }
-            set { coll21 = value; KosztLogicznyObslugi = CalculateTotalCost(); }
-        }
-        private Double coll22;
-        public System.Double Coll22
-        {
-            get { return coll22; }
-            set { coll22 = value; KosztLogicznyObslugi = CalculateTotalCost(); }
-        }
-        private Double coll23;
-        public System.Double Coll23
-        {
-            get { return coll23; }
-            set { coll23 = value; KosztLogicznyObslugi = CalculateTotalCost(); }
-        }
-        private Double coll24;
-        public System.Double Coll24
-        {
-            get { return coll24; }
-            set { coll24 = value; KosztLogicznyObslugi = CalculateTotalCost(); }
-        }
-        private Double coll25;
-        public System.Double Coll25
-        {
-            get { return coll25; }
-            set { coll25 = value; KosztLogicznyObslugi = CalculateTotalCost(); }
-        }
-        private Double coll26;
-        public System.Double Coll26
-        {
-            get { return coll26; }
-            set { coll26 = value; KosztLogicznyObslugi = CalculateTotalCost(); }
-        }
-        private Double coll27;
-        public System.Double Coll27
-        {
-            get { return coll27; }
-            set { coll27 = value; KosztLogicznyObslugi = CalculateTotalCost(); }
-        }
-        private Double coll28;
-        public System.Double Coll28
-        {
-            get { return coll28; }
-            set { coll28 = value; KosztLogicznyObslugi = CalculateTotalCost(); }
-        }
-        private Double coll29;
-        public System.Double Coll29
-        {
-            get { return coll29; }
-            set { coll29 = value; KosztLogicznyObslugi = CalculateTotalCost(); }
-        }
-        private Double coll30;
-        public System.Double Coll30
-        {
-            get { return coll30; }
-            set { coll30 = value; KosztLogicznyObslugi = CalculateTotalCost(); }
-        }
-        private Double coll31;
-        public System.Double Coll31
-        {
-            get { return coll31; }
-            set { coll31 = value; KosztLogicznyObslugi = CalculateTotalCost(); }
-        }
-        private Double coll32;
-        public System.Double Coll32
-        {
-            get { return coll32; }
-            set { coll32 = value; KosztLogicznyObslugi = CalculateTotalCost(); }
+          
+            List< List<int>> sequence = new List<List<int>>();
+
+
+            foreach (var ListModules in listModulesList)
+            {
+                var temp = new List<int>();
+                foreach (var ity in ListModules)
+                {
+                    temp.Add(ity.Key);
+                }
+                sequence.Add(temp);
+            }
+        
+            
+
+
+            return sequence.OrderByDescending(x => x.Count).ToList(); 
         }
 
-        private Double wspolczynik;
-        public System.Double Wspolczynik
+        private static int FindIndex(Dictionary<int, Tuple<string, string>> tempList, Tuple<string, string> elem)
         {
-            get { return wspolczynik; }
-            set { wspolczynik = value; KosztLogicznyObslugi = CalculateTotalCost(); }
+            foreach (var ity in tempList)
+            {
+                if (ity.Value.Item1 == elem.Item1 && ity.Value.Item2 == elem.Item2)
+                    return ity.Key;
+            }
+
+            return -1;
         }
 
-        private double CalculateTotalCost()
+        private static KeyValuePair<int, Tuple<string, string>> GetNext(Dictionary<int, Tuple<string, string>> tempList, Tuple<string, string> elem, bool isLastElem,  Dictionary<int, Tuple<string, string>> tempNewList)
         {
-            double total = 0.0f;
-            total += coll1 + coll2 + coll3 + coll4 + coll5 + coll6 + coll7 + coll8 + coll9 + coll10;
-            total += coll11 + coll12+coll13 + coll14 + coll15+ coll16 + coll17 + coll18 + coll19 + coll20;
-            total += coll21 + coll22 + coll23 + coll24 + coll25 + coll26 + coll27 + coll28 + coll29 + coll30+ coll31 + coll32;
-            total *= Wspolczynik;
-            return total;
+            foreach (var ity in tempList)
+            {
+                if(isLastElem && ity.Value.Item1 == elem.Item2 && ity.Value.Item2 != elem.Item1)
+                {
+                    return ity;
+                }
+                else if ( ity.Value.Item1 == elem.Item2 && ity.Value.Item2 != elem.Item1 && NotInList(tempNewList, ity))
+                {
+
+                    return ity;
+
+
+                }
+
+            }
+           
+
+            return default(KeyValuePair<int, Tuple<string, string>>);
         }
 
-        private Double kosztLogicznyObslugi;
-        public System.Double KosztLogicznyObslugi
+        private static bool NotInList(Dictionary<int, Tuple<string, string>> tempNewList, KeyValuePair<int, Tuple<string, string>> elem)
         {
-            get { return kosztLogicznyObslugi; }
-            set { kosztLogicznyObslugi = value; }
+
+            foreach (var ity in tempNewList)
+            {
+                if (ity.Value.Item1 == elem.Value.Item2 && ity.Value.Item2 == elem.Value.Item1)
+                    return false;
+            }
+            return true;
         }
+        private static List<string> GetListModules(List<string> my_ColumnName)
+        {
+
+            List<string> listModules = new List<string>();
+
+            foreach (string ity in my_ColumnName)
+            {
+                if (ity.IndexOf("->") <= 0)
+                    continue;
+
+
+                var temp = ity.Substring(0, ity.IndexOf("->"));
+                bool IsInList = listModules.Any(temp.Contains);
+                if (!IsInList)
+                {
+                    listModules.Add(temp);
+                }
+            }
+            return listModules;
+        }
+
+        private static KeyValuePair<int, Tuple<string, string>> GetBack(Dictionary<int, Tuple<string, string>> tempList, Tuple<string, string> elem)
+        {
+            foreach (var ity in tempList)
+            {
+                if (ity.Value.Item1 == elem.Item1 && ity.Value.Item2 == elem.Item2 )
+                {
+
+                    return ity;
+
+
+                }
+
+            }
+
+            return default(KeyValuePair<int, Tuple<string, string>>);
+        }
+
     }
 }

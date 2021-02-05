@@ -174,6 +174,7 @@ namespace ExpertOblicKosztowZam
                         {
                             if (clollNum > 1)
                             {
+                                var t = ColumnName[collId + 2];
                                 _zamow._Param.Add(ColumnName[collId + 2], Double.Parse(collumn));
                                 collId++;
                             }
