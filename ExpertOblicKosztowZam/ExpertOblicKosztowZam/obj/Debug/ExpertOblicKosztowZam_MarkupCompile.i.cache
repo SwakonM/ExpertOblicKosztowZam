@@ -10,11 +10,11 @@ none
 false
 DEBUG;TRACE
 d:\mateusz\Inzynier\ExpertOblicKosztowZam\ExpertOblicKosztowZam\App.xaml
-71840268007
+81351938207
 
-18684940532
-191567911374
-MainWindow.xaml;UnitScheduleComponent.xaml;ucSchedule.xaml;ucSequenceModel.xaml;ucSetting.xaml;UnitProduction.xaml;UnitProductionConnection.xaml;
+19-797704181
+211289613200
+MainWindow.xaml;ucOrders.xaml;UnitScheduleComponent.xaml;ucSchedule.xaml;ucSequenceModel.xaml;ucSetting.xaml;UnitProduction.xaml;UnitProductionConnection.xaml;
 
-False
+True
 

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ExpertOblicKosztowZam
 {
-    public class Zamowinia : INotifyPropertyChanged
+    public class Zamowinia : INotifyPropertyChanged, IEditableObject
     { 
         
         public event PropertyChangedEventHandler PropertyChanged;
@@ -281,6 +281,23 @@ namespace ExpertOblicKosztowZam
             total += coll21 + coll22 + coll23 + coll24 + coll25 + coll26 + coll27 + coll28 + coll29 + coll30+ coll31 + coll32;
             total *= Wspolczynik;
             return total;
+        }
+        object _clone = null;
+        public void BeginEdit()
+        {
+            _clone = this.MemberwiseClone();
+        }
+        public void CancelEdit()
+        {
+            foreach (var p in this.GetType().GetProperties())
+            {
+                var value = p.GetValue(_clone, null);
+                p.SetValue(this, value, null);
+            }
+        }
+        public void EndEdit()
+        {
+            _clone = null;
         }
 
         private Double kosztLogicznyObslugi;

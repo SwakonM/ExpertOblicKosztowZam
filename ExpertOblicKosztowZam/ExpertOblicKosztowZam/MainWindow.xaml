@@ -24,7 +24,8 @@
                     <ribbon:RibbonButton x:Name="btRead" Label="Wczytaj" LargeImageSource="Image/applications.png" Click="btRead_Click"/>
                     <ribbon:RibbonButton x:Name="btOpenGrid" Label="Zamówienia" LargeImageSource="Image/make.png" Click="btOpenGrid_Click"/>
                     <ribbon:RibbonButton x:Name="btCalculate" Label="Strukura Procesu" LargeImageSource="Image/calculator_operations.png" Click="btCalculate_Click"/>
-                    <ribbon:RibbonButton x:Name="btSchedule" Label="harmonogram procesu" LargeImageSource="Image/kviewshell.png" Click="btSchedule_Click"/>
+                    <ribbon:RibbonButton x:Name="btSchedule" Label="Harmonogram procesu" LargeImageSource="Image/kviewshell.png" Click="btSchedule_Click"/>
+                    <ribbon:RibbonButton x:Name="btOrders" Label="Harmonogram zamówień" LargeImageSource="lists_64x64.png" Click="btOrders_Click"/>
                     <ribbon:RibbonButton x:Name="btExit" Label="Exit" LargeImageSource="Image/exit1.png" Click="btExit_Click" />
                 </ribbon:RibbonGroup>
             </ribbon:RibbonTab>

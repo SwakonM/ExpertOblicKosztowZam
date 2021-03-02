@@ -29,3 +29,9 @@ d:\mateusz\Inzynier\ExpertOblicKosztowZam\ExpertOblicKosztowZam\bin\Debug\ScottP
 d:\mateusz\Inzynier\ExpertOblicKosztowZam\ExpertOblicKosztowZam\bin\Debug\ScottPlot.WPF.dll
 d:\mateusz\Inzynier\ExpertOblicKosztowZam\ExpertOblicKosztowZam\bin\Debug\System.Drawing.Common.dll
 d:\mateusz\Inzynier\ExpertOblicKosztowZam\ExpertOblicKosztowZam\obj\Debug\ExpertOblicKosztowZam.csproj.CopyComplete
+d:\mateusz\Inzynier\ExpertOblicKosztowZam\ExpertOblicKosztowZam\obj\Debug\ucOrders.g.cs
+d:\mateusz\Inzynier\ExpertOblicKosztowZam\ExpertOblicKosztowZam\bin\Debug\LiveCharts.dll
+d:\mateusz\Inzynier\ExpertOblicKosztowZam\ExpertOblicKosztowZam\bin\Debug\LiveCharts.pdb
+d:\mateusz\Inzynier\ExpertOblicKosztowZam\ExpertOblicKosztowZam\bin\Debug\LiveCharts.Wpf.dll
+d:\mateusz\Inzynier\ExpertOblicKosztowZam\ExpertOblicKosztowZam\bin\Debug\LiveCharts.Wpf.pdb
+d:\mateusz\Inzynier\ExpertOblicKosztowZam\ExpertOblicKosztowZam\obj\Debug\ucOrders.baml

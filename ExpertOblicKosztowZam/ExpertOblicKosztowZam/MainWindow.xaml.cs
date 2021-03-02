@@ -266,5 +266,18 @@ namespace ExpertOblicKosztowZam
             }
 
         }
+
+        private void btOrders_Click(object sender, RoutedEventArgs e)
+        {
+            if (IsInit)
+            {
+                ucOrders mdiChild = new ucOrders(ref my_ListZamowin, ref ColumnName);
+                AddTab(mdiChild);
+            }
+            else
+            {
+                InitDate();
+            }
+        }
     }
 }

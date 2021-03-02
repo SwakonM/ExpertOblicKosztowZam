@@ -1,0 +1,14 @@
+{
+  "version": 2,
+  "dgSpecHash": "u1EUIFKqrrKsfvtZGIkqVkJbFvo+d/LI3fhdzjJ2T+ovdbYzdtV2UutapkVQ+WIDOf3azIwtNseze5aHEVKMjA==",
+  "success": true,
+  "projectFilePath": "d:\\mateusz\\Inzynier\\ExpertOblicKosztowZam\\ExpertOblicKosztowZam\\ExpertOblicKosztowZam.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\rysza\\.nuget\\packages\\livecharts\\0.9.7\\livecharts.0.9.7.nupkg.sha512",
+    "C:\\Users\\rysza\\.nuget\\packages\\livecharts.wpf\\0.9.7\\livecharts.wpf.0.9.7.nupkg.sha512",
+    "C:\\Users\\rysza\\.nuget\\packages\\scottplot\\4.1.3-beta\\scottplot.4.1.3-beta.nupkg.sha512",
+    "C:\\Users\\rysza\\.nuget\\packages\\scottplot.wpf\\4.1.3-beta\\scottplot.wpf.4.1.3-beta.nupkg.sha512",
+    "C:\\Users\\rysza\\.nuget\\packages\\system.drawing.common\\5.0.0\\system.drawing.common.5.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}

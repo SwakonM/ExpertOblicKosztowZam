@@ -1,7 +1,6 @@
 d:\mateusz\Inzynier\ExpertOblicKosztowZam\ExpertOblicKosztowZam\bin\Release\ExpertOblicKosztowZam.exe.config
 d:\mateusz\Inzynier\ExpertOblicKosztowZam\ExpertOblicKosztowZam\bin\Release\ExpertOblicKosztowZam.exe
 d:\mateusz\Inzynier\ExpertOblicKosztowZam\ExpertOblicKosztowZam\bin\Release\ExpertOblicKosztowZam.pdb
-d:\mateusz\Inzynier\ExpertOblicKosztowZam\ExpertOblicKosztowZam\obj\Release\ExpertOblicKosztowZam.csprojAssemblyReference.cache
 d:\mateusz\Inzynier\ExpertOblicKosztowZam\ExpertOblicKosztowZam\obj\Release\MainWindow.baml
 d:\mateusz\Inzynier\ExpertOblicKosztowZam\ExpertOblicKosztowZam\obj\Release\MainWindow.g.cs
 d:\mateusz\Inzynier\ExpertOblicKosztowZam\ExpertOblicKosztowZam\obj\Release\UnitScheduleComponent.g.cs
@@ -25,3 +24,14 @@ d:\mateusz\Inzynier\ExpertOblicKosztowZam\ExpertOblicKosztowZam\obj\Release\Expe
 d:\mateusz\Inzynier\ExpertOblicKosztowZam\ExpertOblicKosztowZam\obj\Release\ExpertOblicKosztowZam.csproj.CoreCompileInputs.cache
 d:\mateusz\Inzynier\ExpertOblicKosztowZam\ExpertOblicKosztowZam\obj\Release\ExpertOblicKosztowZam.exe
 d:\mateusz\Inzynier\ExpertOblicKosztowZam\ExpertOblicKosztowZam\obj\Release\ExpertOblicKosztowZam.pdb
+d:\mateusz\Inzynier\ExpertOblicKosztowZam\ExpertOblicKosztowZam\bin\Release\LiveCharts.dll
+d:\mateusz\Inzynier\ExpertOblicKosztowZam\ExpertOblicKosztowZam\bin\Release\LiveCharts.pdb
+d:\mateusz\Inzynier\ExpertOblicKosztowZam\ExpertOblicKosztowZam\bin\Release\LiveCharts.Wpf.dll
+d:\mateusz\Inzynier\ExpertOblicKosztowZam\ExpertOblicKosztowZam\bin\Release\LiveCharts.Wpf.pdb
+d:\mateusz\Inzynier\ExpertOblicKosztowZam\ExpertOblicKosztowZam\bin\Release\ScottPlot.dll
+d:\mateusz\Inzynier\ExpertOblicKosztowZam\ExpertOblicKosztowZam\bin\Release\ScottPlot.WPF.dll
+d:\mateusz\Inzynier\ExpertOblicKosztowZam\ExpertOblicKosztowZam\bin\Release\System.Drawing.Common.dll
+d:\mateusz\Inzynier\ExpertOblicKosztowZam\ExpertOblicKosztowZam\obj\Release\ucOrders.g.cs
+d:\mateusz\Inzynier\ExpertOblicKosztowZam\ExpertOblicKosztowZam\obj\Release\ucOrders.baml
+d:\mateusz\Inzynier\ExpertOblicKosztowZam\ExpertOblicKosztowZam\obj\Release\ExpertOblicKosztowZam.csproj.CopyComplete
+d:\mateusz\Inzynier\ExpertOblicKosztowZam\ExpertOblicKosztowZam\obj\Release\ExpertOblicKosztowZam.csprojAssemblyReference.cache

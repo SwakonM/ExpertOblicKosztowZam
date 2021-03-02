@@ -1,7 +1,8 @@
 ﻿using Microsoft.Win32;
-using ScottPlot;
+
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -64,58 +65,78 @@ namespace ExpertOblicKosztowZam
             get { return "Zamówienia"; }
         }
         #endregion
-
-        private void FillGrid()
+        private static DataTemplate getDataTemplate(int count)
         {
-            if (!isInit)
-                return;
-            listView1.Items.Clear();
-            my_zamowinias.Clear();
-           
-            GridView view = new GridView();
-            System.Windows.Style style = new System.Windows.Style();
-            style.TargetType = typeof(GridViewColumnHeader);
-            style.Setters.Add(new Setter(GridViewColumnHeader.HeightProperty, 90d));
-            style.Setters.Add(new Setter(GridViewColumnHeader.BackgroundProperty, new SolidColorBrush(Colors.LightSkyBlue)));
-            view.ColumnHeaderContainerStyle = style;
-           
-            GridViewColumn col1 = new GridViewColumn();
-          
-            col1.Header = my_ColumnName[0].Replace('@', ',');
-            col1.DisplayMemberBinding = new Binding("IdZam");
-            view.Columns.Add(col1);
+            DataTemplate template = new DataTemplate();
+            FrameworkElementFactory factory = new FrameworkElementFactory(typeof(TextBlock));
+            factory.SetValue(TextBlock.TextAlignmentProperty, TextAlignment.Right);
+            factory.SetBinding(TextBlock.TextProperty, new Binding(string.Format("[{0}]", count)));
+            template.VisualTree = factory;
 
-            GridViewColumn col2 = new GridViewColumn();
-            col2.Header = my_ColumnName[1];
-            col2.DisplayMemberBinding = new Binding("LiczZam");
-            view.Columns.Add(col2);
+            return template;
+        }
+        private void MouseDownOnCell(object sender, MouseButtonEventArgs e)
+        {
 
-            GridViewColumn col3 = new GridViewColumn();
-            col3.Header = "γ_m,n";
-            col3.DisplayMemberBinding = new Binding("Wspolczynik");
-            view.Columns.Add(col3);
-           
+            var I = sender;
+        }
 
+        private void InitGrid()
+        {
+            var coll01 = new DataGridTextColumn();
 
+            coll01.Binding = new Binding("IdZam");
+            coll01.Header = my_ColumnName[0].Replace('@', ',');
+
+            DatagridMovie.Columns.Add(coll01);
+
+            var coll02 = new DataGridTextColumn();
+            coll02.Binding = new Binding("LiczZam");
+            coll02.Header = my_ColumnName[1];
+            DatagridMovie.Columns.Add(coll02);
+
+            var coll03 = new DataGridTextColumn();
+            coll03.Binding = new Binding("Wspolczynik");
+            coll03.Header = "γ_m,n";
+            DatagridMovie.Columns.Add(coll03);
             int index = 1;
             foreach (var collName in my_ColumnName)
             {
                 if (index > 2)
                 {
-                    var coll = new GridViewColumn();
+                    var coll = new DataGridTextColumn();
+
                     coll.Header = collName;
-                    coll.DisplayMemberBinding = new Binding("Coll" + (index - 2));
-                    view.Columns.Add(coll);
+                    coll.Binding = new Binding("Coll" + (index - 2));
+
+
+                    DatagridMovie.Columns.Add(coll);
 
                 }
                 index++;
             }
-            GridViewColumn col4 = new GridViewColumn();
-            col4.Header = "C_m,n";
-            col4.DisplayMemberBinding = new Binding("KosztLogicznyObslugi");
-            view.Columns.Add(col4);
 
-            listView1.View = view;
+            var coll04 = new DataGridTextColumn();
+            coll04.Header = "C_m,n";
+            coll04.Binding = new Binding("KosztLogicznyObslugi");
+            DatagridMovie.Columns.Add(coll04);
+            DatagridMovie.AddHandler(DataGrid.MouseLeftButtonDownEvent, new MouseButtonEventHandler(MouseDownOnCell), true);
+        }
+
+        private void FillGrid(bool isUpdate)
+        {
+            if (!isInit)
+                return;
+            
+            my_zamowinias.Clear();
+
+            if (isUpdate)            
+                InitGrid();
+
+
+
+            
+
             foreach (var zam in my_ListZamowin)
             {
                 var temp = new Zamowinia(zam.IdZamowinia.Replace('@', ','), zam.LiczbaJedostekZam, Double.Parse(this.BazowyWspoczIlos.Text), Double.Parse(DenominatorMin.Text), Double.Parse(MaxWartosc.Text));
@@ -154,16 +175,50 @@ namespace ExpertOblicKosztowZam
 
 
                 my_zamowinias.Add(temp);
-
-
-                listView1.Items.Add(temp);
-            }
             
-        }
+       
+                
+            }
 
+
+           
+         
+          
+        
+           
+
+            //  var column1 = new DataColumn("IdZam", typeof(string));
+            //    column1.ColumnName = my_ColumnName[0].Replace('@', ',');
+            //   var column2 = new DataColumn("IdZam", typeof(string));
+
+
+           
+
+           // CollectionViewSource itemCollectionViewSource;
+          //  itemCollectionViewSource = (CollectionViewSource)(FindResource("ItemCollectionViewSource"));
+           
+            DatagridMovie.ItemsSource = null;
+            DatagridMovie.ItemsSource = my_zamowinias;
+            DatagridMovie.UpdateLayout();
+            DatagridMovie.Items.Refresh();
+            //itemCollectionViewSource.Source = my_zamowinias;
+         
+
+
+        }
+        private void Row_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            // Ensure row was clicked and not empty space
+            var row = ItemsControl.ContainerFromElement((DataGrid)sender,
+                                                e.OriginalSource as DependencyObject) as DataGridRow;
+
+            if (row == null) return;
+
+    
+        }
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
-            FillGrid();
+            FillGrid(true);
             //if (my_zamowinias.Count() > 0)
             //{
             //    List<double> ldataX = new List<double>();
@@ -193,15 +248,15 @@ namespace ExpertOblicKosztowZam
         private void BazowyWspoczIlos_TextChanged(object sender, TextChangedEventArgs e)
         {
             var textBox = sender as TextBox;
-            if(textBox.Text.Length>0)
-            FillGrid();
+           if(textBox.Text.Length>0)
+            FillGrid(false);
         }
         
         private void DenominatorMin_TextChanged(object sender, TextChangedEventArgs e)
         {
             var textBox = sender as TextBox;
             if (textBox.Text.Length > 0)
-                FillGrid();
+                FillGrid(false);
         }
     }
     

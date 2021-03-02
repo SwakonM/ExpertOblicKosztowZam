@@ -8,6 +8,6 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("kviewshell.png")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("lists_64x64.png")]
 
 
